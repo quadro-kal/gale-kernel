@@ -2,6 +2,10 @@
 
 include /usr/share/linux-packaging-snippets/kernel-snippet.mk
 
+# Override BUILD_COMMAND to add LD=ld.lld for VDSO cross-linking
+# Must be after include because kernel-snippet.mk defines BUILD_COMMAND after including kernel-info.mk
+BUILD_COMMAND = PATH=$(FULL_PATH) LDFLAGS="" CFLAGS="" HOSTLDFLAGS=$(HOSTLDFLAG) $(MAKE) -C $(KERNEL_SOURCES) KERNELRELEASE=$(KERNEL_RELEASE) ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(CROSS_COMPILE) CROSS_COMPILE_ARM32=$(CROSS_COMPILE) CLANG_TRIPLE=$(BUILD_CLANG_TRIPLET) -j$(NUMJOBS) $(MAKEOPTS) O=$(KERNEL_OUT) CC=$(BUILD_CC) LD=ld.lld
+
 # Debug target to print variables at rule execution time
 debug-vars:
 	@echo "KERNEL_BASE_VERSION=$(KERNEL_BASE_VERSION)"
