@@ -24,6 +24,8 @@
 #define DRM_IF_MAJOR 1
 #define DRM_IF_MINOR 4
 
+#include <drm/drm_ioctl.h>
+
 /* drm_file.c */
 extern struct mutex drm_global_mutex;
 struct drm_file *drm_file_alloc(struct drm_minor *minor);

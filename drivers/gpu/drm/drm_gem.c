@@ -38,6 +38,7 @@
 #include <linux/dma-buf.h>
 #include <linux/mem_encrypt.h>
 #include <linux/pagevec.h>
+#include <linux/reservation.h>
 
 #include <drm/drm.h>
 #include <drm/drm_device.h>
@@ -76,6 +77,23 @@
  * that we can transition to fds if the required kernel infrastructure shows
  * up at a later date, and as our interface with shmfs for memory allocation.
  */
+
+/*
+ * We make up offsets for buffer objects so we can recognize them at
+ * mmap time.
+ */
+
+/* pgoff in mmap is an unsigned long, so we need to make sure that
+ * the faked up offset will fit
+ */
+
+#if BITS_PER_LONG == 64
+#define DRM_FILE_PAGE_OFFSET_START ((0xFFFFFFFFUL >> PAGE_SHIFT) + 1)
+#define DRM_FILE_PAGE_OFFSET_SIZE ((0xFFFFFFFFUL >> PAGE_SHIFT) * 16)
+#else
+#define DRM_FILE_PAGE_OFFSET_START ((0xFFFFFFFUL >> PAGE_SHIFT) + 1)
+#define DRM_FILE_PAGE_OFFSET_SIZE ((0xFFFFFFFUL >> PAGE_SHIFT) * 16)
+#endif
 
 /**
  * drm_gem_init - Initialize the GEM device fields
@@ -159,7 +177,7 @@ void drm_gem_private_object_init(struct drm_device *dev,
 	kref_init(&obj->refcount);
 	obj->handle_count = 0;
 	obj->size = size;
-	dma_resv_init(&obj->_resv);
+	reservation_object_init(&obj->_resv);
 	if (!obj->resv)
 		obj->resv = &obj->_resv;
 
@@ -524,7 +542,7 @@ EXPORT_SYMBOL(drm_gem_create_mmap_offset);
  */
 static void drm_gem_check_release_pagevec(struct pagevec *pvec)
 {
-	check_move_unevictable_pages(pvec);
+	check_move_unevictable_pages(pvec->pages, pagevec_count(pvec));
 	__pagevec_release(pvec);
 	cond_resched();
 }
@@ -779,8 +797,8 @@ long drm_gem_dma_resv_wait(struct drm_file *filep, u32 handle,
 		return -EINVAL;
 	}
 
-	ret = dma_resv_wait_timeout_rcu(obj->resv, wait_all,
-						  true, timeout);
+	ret = reservation_object_wait_timeout_rcu(obj->resv, wait_all,
+						      true, timeout);
 	if (ret == 0)
 		ret = -ETIME;
 	else if (ret > 0)
@@ -956,7 +974,7 @@ drm_gem_object_release(struct drm_gem_object *obj)
 	if (obj->filp)
 		fput(obj->filp);
 
-	dma_resv_fini(&obj->_resv);
+	reservation_object_fini(&obj->_resv);
 	drm_gem_free_mmap_offset(obj);
 }
 EXPORT_SYMBOL(drm_gem_object_release);
@@ -1291,8 +1309,8 @@ retry:
 	if (contended != -1) {
 		struct drm_gem_object *obj = objs[contended];
 
-		ret = dma_resv_lock_slow_interruptible(obj->resv,
-								 acquire_ctx);
+		ret = ww_mutex_lock_slow_interruptible(&obj->resv->lock,
+						       acquire_ctx);
 		if (ret) {
 			ww_acquire_done(acquire_ctx);
 			return ret;
@@ -1303,16 +1321,16 @@ retry:
 		if (i == contended)
 			continue;
 
-		ret = dma_resv_lock_interruptible(objs[i]->resv,
-							    acquire_ctx);
+		ret = reservation_object_lock_interruptible(objs[i]->resv,
+							  acquire_ctx);
 		if (ret) {
 			int j;
 
 			for (j = 0; j < i; j++)
-				dma_resv_unlock(objs[j]->resv);
+				reservation_object_unlock(objs[j]->resv);
 
 			if (contended != -1 && contended >= i)
-				dma_resv_unlock(objs[contended]->resv);
+				reservation_object_unlock(objs[contended]->resv);
 
 			if (ret == -EDEADLK) {
 				contended = i;
@@ -1337,7 +1355,7 @@ drm_gem_unlock_reservations(struct drm_gem_object **objs, int count,
 	int i;
 
 	for (i = 0; i < count; i++)
-		dma_resv_unlock(objs[i]->resv);
+		reservation_object_unlock(objs[i]->resv);
 
 	ww_acquire_fini(acquire_ctx);
 }
@@ -1350,42 +1368,21 @@ EXPORT_SYMBOL(drm_gem_unlock_reservations);
  * @fence_array: array of dma_fence * for the job to block on.
  * @fence: the dma_fence to add to the list of dependencies.
  *
+ * NOTE (gale port): struct xarray in this 4.19 tree is a stub without
+ * xa_for_each/xa_store/xa_alloc, and there are no in-tree callers, so this
+ * is a stub that drops the reference and reports -EOPNOTSUPP.
+ *
  * Returns:
  * 0 on success, or an error on failing to expand the array.
  */
 int drm_gem_fence_array_add(struct xarray *fence_array,
 			    struct dma_fence *fence)
 {
-	struct dma_fence *entry;
-	unsigned long index;
-	u32 id = 0;
-	int ret;
-
 	if (!fence)
 		return 0;
 
-	/* Deduplicate if we already depend on a fence from the same context.
-	 * This lets the size of the array of deps scale with the number of
-	 * engines involved, rather than the number of BOs.
-	 */
-	xa_for_each(fence_array, index, entry) {
-		if (entry->context != fence->context)
-			continue;
-
-		if (dma_fence_is_later(fence, entry)) {
-			dma_fence_put(entry);
-			xa_store(fence_array, index, fence, GFP_KERNEL);
-		} else {
-			dma_fence_put(fence);
-		}
-		return 0;
-	}
-
-	ret = xa_alloc(fence_array, &id, fence, xa_limit_32b, GFP_KERNEL);
-	if (ret != 0)
-		dma_fence_put(fence);
-
-	return ret;
+	dma_fence_put(fence);
+	return -EOPNOTSUPP;
 }
 EXPORT_SYMBOL(drm_gem_fence_array_add);
 
@@ -1413,12 +1410,12 @@ int drm_gem_fence_array_add_implicit(struct xarray *fence_array,
 
 	if (!write) {
 		struct dma_fence *fence =
-			dma_resv_get_excl_rcu(obj->resv);
+			reservation_object_get_excl_rcu(obj->resv);
 
 		return drm_gem_fence_array_add(fence_array, fence);
 	}
 
-	ret = dma_resv_get_fences_rcu(obj->resv, NULL,
+	ret = reservation_object_get_fences_rcu(obj->resv, NULL,
 						&fence_count, &fences);
 	if (ret || !fence_count)
 		return ret;
