@@ -31,9 +31,25 @@ KERNEL_IMAGE_DTB_OVERLAY = arch/arm64/boot/dts/mediatek/gale.dtbo
 # Prebuilt DT (only for Samsung devices typically)
 # KERNEL_PREBUILT_DT =
 
-# Boot image parameters - OBTAIN FROM unpackbootimg ON STOCK BOOT.IMG [CEK]
-# unpackbootimg --boot_img boot.img (or: unpackbootimg -i boot.img for AOSP version)
-KERNEL_BOOTIMAGE_CMDLINE = console=tty0 droidian.lvm.prefer
+# Boot image parameters - OBTAINED FROM unpack_bootimg ON STOCK BOOT.IMG
+# unpack_bootimg --boot_img boot.img
+# Output from boot.img:
+#   boot magic: ANDROID!
+#   kernel_size: 18977253
+#   ramdisk size: 17283808
+#   kernel load address: 0x40080000
+#   ramdisk load address: 0x47c80000
+#   second bootloader size: 0
+#   kernel tags load address: 0x4bc80000
+#   page size: 2048
+#   os version: 17.0.0 (Android 13)
+#   os patch level: 2026-09
+#   boot image header version: 2
+#   command line args: bootopt=64S3,32N2,64N2 androidboot.init_fatal_reboot_target=recovery
+#   dtb size: 127664
+#   dtb address: 0x0000000041f78000
+
+KERNEL_BOOTIMAGE_CMDLINE = bootopt=64S3,32N2,64N2 androidboot.init_fatal_reboot_target=recovery console=tty0 droidian.lvm.prefer
 # REMOVE any 'systempart=' entry from stock cmdline!
 # If stock has 'console=ttyMT3,921600n1', REPLACE with 'console=tty0' (Halium requirement)
 
@@ -41,11 +57,11 @@ KERNEL_BOOTIMAGE_PAGE_SIZE = 2048
 KERNEL_BOOTIMAGE_BASE_OFFSET = 0x40078000
 KERNEL_BOOTIMAGE_KERNEL_OFFSET = 0x00008000
 KERNEL_BOOTIMAGE_INITRAMFS_OFFSET = 0x11a88000
-KERNEL_BOOTIMAGE_SECONDIMAGE_OFFSET = 0x00e88000
+KERNEL_BOOTIMAGE_SECONDIMAGE_OFFSET = 0x00000000
 KERNEL_BOOTIMAGE_TAGS_OFFSET = 0x07808000
-KERNEL_BOOTIMAGE_DTB_OFFSET = 0x07808000
-# Header version from unpackbootimg (Android 8- =0, 9=1, 10/11=2, GKI=3)
-# Android 13 non-GKI typically = 2 or 3 [CEK]
+KERNEL_BOOTIMAGE_DTB_OFFSET = 0x01f78000
+# Header version from unpack_bootimg (Android 8- =0, 9=1, 10/11=2, GKI=3)
+# Android 13 non-GKI header version = 2
 KERNEL_BOOTIMAGE_VERSION = 2
 
 # Device identification (used for package naming)
