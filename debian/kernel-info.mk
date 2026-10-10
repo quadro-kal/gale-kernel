@@ -81,13 +81,12 @@ FLASH_INFO_MODEL = Redmi 13C
 # OBTAIN FROM DEVICE: cat /proc/cpuinfo | grep -i hardware [CEK]
 FLASH_INFO_CPU = MT6768
 
-# Toolchain - Droidian provides clang-android-14.0-r450784d for Android 13
-# Fallback order: clang-android-14.0-r450784d -> clang-android-12.0-r416183b -> manual clang-r433403b -> GCC 4.9
-# Using GCC 11 fallback due to kernel 4.19 API incompatibilities with clang 12/14
+# Toolchain - manual Linaro GCC 6.3.1 in /opt (matches build.config.mtk.aarch64.gcc)
+# + Debian cross gcc-aarch64 as fallback in /usr/bin
 CLANG_CUSTOM := 0
-DEB_TOOLCHAIN := gcc-11
-BUILD_PATH := /usr/bin
-BUILD_CC := aarch64-linux-gnu-gcc-11
+DEB_TOOLCHAIN := gcc
+BUILD_PATH := /opt/gcc-6.3.1/bin:/usr/bin
+BUILD_CC := aarch64-linux-gnu-gcc
 # BUILD_CLANG_TRIPLET not needed for GCC
 BUILD_CLANG_TRIPLET := aarch64-linux-gnu
 
