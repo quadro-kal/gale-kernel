@@ -88,6 +88,8 @@ CLANG_CUSTOM := 1
 DEB_TOOLCHAIN := clang-android-14.0-r450784d
 BUILD_PATH := /usr/lib/llvm-android-14.0-r450784d/bin
 BUILD_CC := clang
+# CLANG_TRIPLE for cross-compile (VDSO linking needs correct linker emulation)
+CLANG_TRIPLE := aarch64-linux-gnu
 
 # Use config fragments from droidian/ folder
 KERNEL_CONFIG_USE_FRAGMENTS = 1
