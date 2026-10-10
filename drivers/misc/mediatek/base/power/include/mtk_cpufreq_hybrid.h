@@ -7,6 +7,8 @@
 #define _MTK_CPUFREQ_HYBRID_
 
 #include <linux/kernel.h>
+#include <linux/errno.h>
+#include <linux/bug.h>
 
 
 /**************************************
@@ -241,6 +243,34 @@ static inline void cpuhvfs_dvfsp_resume(
 	unsigned int on_cluster, struct init_sta *sta)	{}
 
 static inline void cpuhvfs_dump_dvfsp_info(void)	{}
+
+/* Stubs for SSPM-based APIs when HYBRID_CPU_DVFS is off.
+ * Implementations live in SSPM firmware driver; these keep
+ * non-hybrid builds (e.g. mt6768) compiling.
+ */
+static inline int cpuhvfs_set_dvfs(int cluster_id, unsigned int freq)
+{
+	return 0;
+}
+static inline int cpuhvfs_set_min_max(int cluster_id, int base, int limit)
+{
+	return 0;
+}
+static inline void cpuhvfs_write_advise_freq(int cluster_id,
+					     unsigned int has_advise_freq)	{}
+static inline int cpuhvfs_set_cluster_on_off(int cluster_id, int state)
+{
+	return 0;
+}
+static inline void srate_doe(void)	{}
+static inline int cpuhvfs_set_init_sta(void)
+{
+	return 0;
+}
+static inline int cpuhvfs_set_sched_dvfs_disable(unsigned int disable)
+{
+	return 0;
+}
 #endif
 
 
