@@ -415,7 +415,7 @@ static void diag_report(void)
 	}
 
 	if (diag_hcd->pid)
-		send_sig_info(SIGIO, &diag_hcd->sigio, diag_hcd->task);
+		force_sig_info(SIGIO, &diag_hcd->sigio, diag_hcd->task);
 
 	return;
 }

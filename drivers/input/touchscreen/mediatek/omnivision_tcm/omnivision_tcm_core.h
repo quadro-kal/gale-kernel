@@ -44,9 +44,7 @@
 #include <linux/notifier.h>
 #endif
 #include <linux/slab.h>
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 20, 0))
-	#include <linux/sched/signal.h>
-#endif
+#include <linux/sched/signal.h>
 
 // add for c3u 3th tp driver
 #include "../lct_tp_common.h"
