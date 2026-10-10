@@ -60,7 +60,7 @@
 
 bool drm_sched_entity_is_ready(struct drm_sched_entity *entity);
 void drm_sched_wakeup(struct drm_gpu_scheduler *sched);
-void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb);
+static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb);
 
 /**
  * drm_sched_rq_init - initialize a given run queue struct
@@ -807,8 +807,9 @@ drm_sched_select_entity(struct drm_gpu_scheduler *sched)
  */
 static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
 {
-	struct drm_sched_fence *s_fence =
-		container_of(cb, struct drm_sched_fence, cb);
+	struct drm_sched_job *s_job =
+		container_of(cb, struct drm_sched_job, cb);
+	struct drm_sched_fence *s_fence = s_job->s_fence;
 	struct drm_gpu_scheduler *sched = s_fence->sched;
 
 	dma_fence_get(&s_fence->finished);
