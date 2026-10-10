@@ -48,6 +48,11 @@ KERNEL_BOOTIMAGE_DTB_OFFSET = 0x07808000
 # Android 13 non-GKI typically = 2 or 3 [CEK]
 KERNEL_BOOTIMAGE_VERSION = 2
 
+# Device identification (used for package naming)
+DEVICE_VENDOR := xiaomi
+DEVICE_MODEL := gale
+DEVICE_FULL_NAME := "Redmi 13C / POCO C65"
+
 # Vendor info for flash-bootimage
 FLASH_ENABLED = 1
 # Non-A/B device (Redmi 13C/POCO C65) - check: getprop ro.build.ab_update [CEK]
@@ -62,10 +67,10 @@ FLASH_INFO_CPU = MT6768
 # Toolchain - Droidian provides clang-android-14.0-r450784d for Android 13
 # Fallback order: clang-android-14.0-r450784d -> clang-android-12.0-r416183b -> manual clang-r433403b -> GCC 4.9
 # Set CLANG_CUSTOM=1 to use exact DEB_TOOLCHAIN value (otherwise kernel-snippet.mk prepends clang-android-$(CLANG_VERSION), )
-CLANG_CUSTOM = 1
-DEB_TOOLCHAIN = clang-android-14.0-r450784d
-BUILD_PATH = /usr/lib/llvm-android-14.0-r450784d/bin
-BUILD_CC = clang
+CLANG_CUSTOM := 1
+DEB_TOOLCHAIN := clang-android-14.0-r450784d
+BUILD_PATH := /usr/lib/llvm-android-14.0-r450784d/bin
+BUILD_CC := clang
 
 # Use config fragments from droidian/ folder
 KERNEL_CONFIG_USE_FRAGMENTS = 1
