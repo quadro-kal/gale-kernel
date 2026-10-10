@@ -51,7 +51,7 @@ KERNEL_BOOTIMAGE_VERSION = 2
 # Device identification (used for package naming)
 DEVICE_VENDOR := xiaomi
 DEVICE_MODEL := gale
-DEVICE_FULL_NAME := "Redmi 13C / POCO C65"
+DEVICE_FULL_NAME := Redmi 13C / POCO C65
 
 # Vendor info for flash-bootimage
 FLASH_ENABLED = 1

@@ -2,5 +2,18 @@
 
 include /usr/share/linux-packaging-snippets/kernel-snippet.mk
 
+# Debug target to print variables at rule execution time
+debug-vars:
+	@echo "KERNEL_BASE_VERSION=$(KERNEL_BASE_VERSION)"
+	@echo "DEVICE_VENDOR=$(DEVICE_VENDOR)"
+	@echo "DEVICE_MODEL=$(DEVICE_MODEL)"
+	@echo "DEVICE_FULL_NAME=$(DEVICE_FULL_NAME)"
+	@echo "VARIANT=$(VARIANT)"
+	@echo "CLANG_CUSTOM=$(CLANG_CUSTOM)"
+	@echo "DEB_TOOLCHAIN=$(DEB_TOOLCHAIN)"
+	@echo "BUILD_PATH=$(BUILD_PATH)"
+	@echo "BUILD_CC=$(BUILD_CC)"
+	@echo "KERNEL_RELEASE=$(KERNEL_RELEASE)"
+
 %:
 	dh $@
