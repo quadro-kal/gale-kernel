@@ -71,11 +71,12 @@ DEVICE_FULL_NAME := Redmi 13C / POCO C65
 
 # Vendor info for flash-bootimage
 FLASH_ENABLED = 1
-# Non-A/B device (Redmi 13C/POCO C65) - check: getprop ro.build.ab_update [CEK]
-FLASH_IS_LEGACY_DEVICE = 1
+# A/B device (Redmi 13C/POCO C65) - verified: getprop ro.build.ab_update = true
+FLASH_IS_LEGACY_DEVICE = 0
 # OBTAIN FROM DEVICE: sudo android_getprop ro.product.vendor.manufacturer [CEK]
 FLASH_INFO_MANUFACTURER = Xiaomi
-# OBTAIN FROM DEVICE: sudo android_getprop ro.product.vendor.model [CEK]
+# OBTAIN FROM DEVICE: sudo android_getprop ro.product.vendor.model [CEK] = 23108RN04Y
+# Using marketing name for readability; internal code = 23108RN04Y
 FLASH_INFO_MODEL = Redmi 13C
 # OBTAIN FROM DEVICE: cat /proc/cpuinfo | grep -i hardware [CEK]
 FLASH_INFO_CPU = MT6768
