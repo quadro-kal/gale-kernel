@@ -61,6 +61,8 @@ FLASH_INFO_CPU = MT6768
 
 # Toolchain - Droidian provides clang-android-14.0-r450784d for Android 13
 # Fallback order: clang-android-14.0-r450784d -> clang-android-12.0-r416183b -> manual clang-r433403b -> GCC 4.9
+# Set CLANG_CUSTOM=1 to use exact DEB_TOOLCHAIN value (otherwise kernel-snippet.mk prepends clang-android-$(CLANG_VERSION), )
+CLANG_CUSTOM = 1
 DEB_TOOLCHAIN = clang-android-14.0-r450784d
 BUILD_PATH = /usr/lib/llvm-android-14.0-r450784d/bin
 BUILD_CC = clang
