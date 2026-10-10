@@ -58,9 +58,9 @@
 #define to_drm_sched_job(sched_job)		\
 		container_of((sched_job), struct drm_sched_job, queue_node)
 
-static bool drm_sched_entity_is_ready(struct drm_sched_entity *entity);
-static void drm_sched_wakeup(struct drm_gpu_scheduler *sched);
-static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb);
+bool drm_sched_entity_is_ready(struct drm_sched_entity *entity);
+void drm_sched_wakeup(struct drm_gpu_scheduler *sched);
+void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb);
 
 /**
  * drm_sched_rq_init - initialize a given run queue struct
@@ -86,7 +86,7 @@ static void drm_sched_rq_init(struct drm_gpu_scheduler *sched,
  *
  * Adds a scheduler entity to the run queue.
  */
-static void drm_sched_rq_add_entity(struct drm_sched_rq *rq,
+void drm_sched_rq_add_entity(struct drm_sched_rq *rq,
 				    struct drm_sched_entity *entity)
 {
 	if (!list_empty(&entity->list))
@@ -104,7 +104,7 @@ static void drm_sched_rq_add_entity(struct drm_sched_rq *rq,
  *
  * Removes a scheduler entity from the run queue.
  */
-static void drm_sched_rq_remove_entity(struct drm_sched_rq *rq,
+void drm_sched_rq_remove_entity(struct drm_sched_rq *rq,
 				       struct drm_sched_entity *entity)
 {
 	if (list_empty(&entity->list))
@@ -223,7 +223,7 @@ static bool drm_sched_entity_is_idle(struct drm_sched_entity *entity)
  *
  * Return true if entity could provide a job.
  */
-static bool drm_sched_entity_is_ready(struct drm_sched_entity *entity)
+bool drm_sched_entity_is_ready(struct drm_sched_entity *entity)
 {
 	if (spsc_queue_peek(&entity->job_queue) == NULL)
 		return false;
@@ -477,7 +477,7 @@ static bool drm_sched_entity_add_dependency_cb(struct drm_sched_entity *entity)
 	return false;
 }
 
-static struct drm_sched_job *
+struct drm_sched_job *
 drm_sched_entity_pop_job(struct drm_sched_entity *entity)
 {
 	struct drm_gpu_scheduler *sched = entity->rq->sched;
@@ -624,7 +624,7 @@ void drm_sched_hw_job_reset(struct drm_gpu_scheduler *sched, struct drm_sched_jo
 	list_for_each_entry_reverse(s_job, &sched->ring_mirror_list, node) {
 		if (s_job->s_fence->parent &&
 		    dma_fence_remove_callback(s_job->s_fence->parent,
-					      &s_job->s_fence->cb)) {
+					      &s_job->cb)) {
 			dma_fence_put(s_job->s_fence->parent);
 			s_job->s_fence->parent = NULL;
 			atomic_dec(&sched->hw_rq_count);
@@ -695,16 +695,16 @@ void drm_sched_job_recovery(struct drm_gpu_scheduler *sched)
 
 		if (fence) {
 			s_fence->parent = dma_fence_get(fence);
-			r = dma_fence_add_callback(fence, &s_fence->cb,
+			r = dma_fence_add_callback(fence, &s_job->cb,
 						   drm_sched_process_job);
 			if (r == -ENOENT)
-				drm_sched_process_job(fence, &s_fence->cb);
+				drm_sched_process_job(fence, &s_job->cb);
 			else if (r)
 				DRM_ERROR("fence add callback failed (%d)\n",
 					  r);
 			dma_fence_put(fence);
 		} else {
-			drm_sched_process_job(NULL, &s_fence->cb);
+			drm_sched_process_job(NULL, &s_job->cb);
 		}
 		spin_lock(&sched->job_list_lock);
 	}
@@ -765,7 +765,7 @@ static bool drm_sched_ready(struct drm_gpu_scheduler *sched)
  * @sched: scheduler instance
  *
  */
-static void drm_sched_wakeup(struct drm_gpu_scheduler *sched)
+void drm_sched_wakeup(struct drm_gpu_scheduler *sched)
 {
 	if (drm_sched_ready(sched))
 		wake_up_interruptible(&sched->wake_up_worker);
@@ -880,16 +880,16 @@ static int drm_sched_main(void *param)
 
 		if (fence) {
 			s_fence->parent = dma_fence_get(fence);
-			r = dma_fence_add_callback(fence, &s_fence->cb,
+			r = dma_fence_add_callback(fence, &sched_job->cb,
 						   drm_sched_process_job);
 			if (r == -ENOENT)
-				drm_sched_process_job(fence, &s_fence->cb);
+				drm_sched_process_job(fence, &sched_job->cb);
 			else if (r)
 				DRM_ERROR("fence add callback failed (%d)\n",
 					  r);
 			dma_fence_put(fence);
 		} else {
-			drm_sched_process_job(NULL, &s_fence->cb);
+			drm_sched_process_job(NULL, &sched_job->cb);
 		}
 
 		wake_up(&sched->job_scheduled);

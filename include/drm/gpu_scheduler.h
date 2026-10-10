@@ -185,6 +185,8 @@ struct drm_sched_job {
 	struct drm_gpu_scheduler	*sched;
 	struct drm_sched_fence		*s_fence;
 	struct dma_fence_cb		finish_cb;
+	struct work_struct		finish_work;
+	struct delayed_work		work_tdr;
 	struct list_head		node;
 	uint64_t			id;
 	atomic_t			karma;
