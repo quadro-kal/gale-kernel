@@ -434,7 +434,7 @@ static ssize_t xgf_spid_list_show(struct kobject *kobj,
 
 	hlist_for_each_entry(xgf_spid_iter, &xgf_wspid_list, hlist) {
 		length = scnprintf(temp + pos, FPSGO_SYSFS_MAX_BUFF_SIZE - pos,
-			"%s\t%s\t%d\t%d\t%d\n",
+			"%s\t%s\t%d\t%d\t%d\t%d\n",
 			xgf_spid_iter->process_name,
 			xgf_spid_iter->thread_name,
 			xgf_spid_iter->rpid,
