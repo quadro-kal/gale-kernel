@@ -174,7 +174,7 @@ static int initAF(void)
 static inline int moveAF(unsigned long a_u4Position)
 {
 	int ret = 0;
-	LOG_INF("husfa_u4Position %d \n",a_u4Position);
+	LOG_INF("husfa_u4Position %lu \n",a_u4Position);
 	if (setPosition((unsigned short)a_u4Position) == 0) {
 		g_u4CurrPosition = a_u4Position;
 		ret = 0;
@@ -269,7 +269,7 @@ int GT9764AF_Release(struct inode *a_pstInode, struct file *a_pstFile)
 		if (g_u4CurrPosition > (AF_STARTCODE_UP + MOVE_CODE_STEP_MAX)) {
 			m_cur_dac_code = AF_STARTCODE_UP + MOVE_CODE_STEP_MAX;
 			setPosition((unsigned short)m_cur_dac_code);
-			LOG_INF("[zengx] release 1 dac_target_code = %d\n",
+			LOG_INF("[zengx] release 1 dac_target_code = %lu\n",
 				m_cur_dac_code);
 			msleep(WAIT_STABLE_TIME);
 			g_u4CurrPosition = m_cur_dac_code;
@@ -277,7 +277,7 @@ int GT9764AF_Release(struct inode *a_pstInode, struct file *a_pstFile)
                 if (g_u4CurrPosition > (AF_STARTCODE_DOWN + MOVE_CODE_STEP_MAX)) {
                         m_cur_dac_code = AF_STARTCODE_DOWN + MOVE_CODE_STEP_MAX;
                         setPosition((unsigned short)m_cur_dac_code);
-                        LOG_INF("[zengx] release 2 dac_target_code = %d\n",
+                        LOG_INF("[zengx] release 2 dac_target_code = %lu\n",
                                 m_cur_dac_code);
                         msleep(WAIT_STABLE_TIME);
                 }

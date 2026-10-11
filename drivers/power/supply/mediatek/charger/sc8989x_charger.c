@@ -2600,7 +2600,7 @@ static int sc8989x_charger_probe(struct i2c_client *client,
     sc8989x_dump_register(sc);
 
     sc->delta_time = ktime_ms_delta(ktime_get(), sc8989x_start_time);
-    pr_err("sc8989x_charger_probe successfully, sc8989x_probe_time:%lldms\n", sc->delta_time);
+    pr_err("sc8989x_charger_probe successfully, sc8989x_probe_time:%ums\n", sc->delta_time);
 
     return 0;
 
