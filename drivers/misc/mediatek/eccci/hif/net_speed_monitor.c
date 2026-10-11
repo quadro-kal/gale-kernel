@@ -129,6 +129,14 @@ static void cpu_freq_rta_action(int update, const int tbl[], int cnum)
 
 /* DRAM qos */
 static struct mtk_pm_qos_request s_ddr_opp_req;
+/* DDR OPP indices were dropped from mtk_dramc.h; values are pm_qos floors,
+ * UNREQ releases back to default. Guarded in case a platform header
+ * provides them. */
+#ifndef DDR_OPP_0
+#define DDR_OPP_0 0
+#define DDR_OPP_1 1
+#define DDR_OPP_UNREQ PM_QOS_DDR_OPP_DEFAULT_VALUE
+#endif
 static void dram_freq_rta_action(int lvl)
 {
 	static int curr_lvl = -1;
