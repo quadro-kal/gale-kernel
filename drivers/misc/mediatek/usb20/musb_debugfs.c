@@ -667,8 +667,7 @@ void /* __init_or_exit */ musb_exit_debugfs(struct musb *musb)
 static int musb_mode_show(struct seq_file *sf, void *unused)
 {
 	struct musb *musb = sf->private;
-	struct mt_usb_glue *glue =
-		container_of(&musb, struct mt_usb_glue, mtk_musb);
+	struct mt_usb_glue *glue = musb->glue;
 
 	seq_printf(sf, "current mode: %s(%s drd)\n(echo device/host)\n",
 		   musb->is_host ? "host" : "device",
@@ -715,8 +714,7 @@ static const struct file_operations musb_mode_fops = {
 static int musb_vbus_show(struct seq_file *sf, void *unused)
 {
 	struct musb *musb = sf->private;
-	struct mt_usb_glue *glue =
-		container_of(&musb, struct mt_usb_glue, mtk_musb);
+	struct mt_usb_glue *glue = musb->glue;
 	struct otg_switch_mtk *otg_sx = &glue->otg_sx;
 
 	seq_printf(sf, "vbus state: %s\n(echo on/off)\n",
@@ -735,8 +733,7 @@ static ssize_t musb_vbus_write(struct file *file, const char __user *ubuf,
 {
 	struct seq_file *sf = file->private_data;
 	struct musb *musb = sf->private;
-	struct mt_usb_glue *glue =
-		container_of(&musb, struct mt_usb_glue, mtk_musb);
+	struct mt_usb_glue *glue = musb->glue;
 	struct otg_switch_mtk *otg_sx = &glue->otg_sx;
 	char buf[16];
 	bool enable;

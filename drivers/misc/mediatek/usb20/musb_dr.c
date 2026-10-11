@@ -240,8 +240,7 @@ static int mt_usb_extcon_register(struct otg_switch_mtk *otg_sx)
  */
 void mt_usb_mode_switch(struct musb *musb, int to_host)
 {
-	struct mt_usb_glue *glue =
-		container_of(&musb, struct mt_usb_glue, mtk_musb);
+	struct mt_usb_glue *glue = musb->glue;
 	struct otg_switch_mtk *otg_sx = &glue->otg_sx;
 
 	if (to_host) {
