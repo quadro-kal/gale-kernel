@@ -50,6 +50,9 @@
 
 #if IS_ENABLED(CONFIG_MTK_IOMMU_V2)
 #include <asm/cacheflush.h>
+
+/* mt6768 has no GPU M4U port; M4U_PORT_GPU sentinel comes from here */
+#include <dt-bindings/memory/mt6768-larb-port.h>
 static DEFINE_MUTEX(ion_config_lock);
 #endif
 
