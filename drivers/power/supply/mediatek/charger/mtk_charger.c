@@ -98,7 +98,7 @@ static int thermal_mitigation[] = {
 int charger_manager_get_system_temp_level(void)
 {
 	if (!pinfo) {
-		pr_err("%s: failed to read charger info\n");
+		pr_err("%s: failed to read charger info\n", __func__);
 		return PTR_ERR(pinfo);
 	}
 
@@ -133,7 +133,7 @@ void charger_manager_set_system_temp_level(int temp_level)
 int charger_manager_get_system_temp_level_max(void)
 {
 	if (!pinfo) {
-		pr_err("%s: failed to read charger info\n");
+		pr_err("%s: failed to read charger info\n", __func__);
 		return PTR_ERR(pinfo);
 	}
 
@@ -2165,7 +2165,7 @@ static int charger_routine_thread(void *arg)
         }
 
         if (is_charger_on == true)
-            chr_debug("xx=%d,yy=%d",is_charger_on,sizeof(is_charger_on));
+            chr_debug("xx=%d,yy=%zu",is_charger_on,sizeof(is_charger_on));
 #endif
 
 		if (info->pd_type) {

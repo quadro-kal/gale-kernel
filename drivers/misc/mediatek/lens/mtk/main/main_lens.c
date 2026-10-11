@@ -636,7 +636,7 @@ static long AF_Ioctl(struct file *a_pstFile, unsigned int a_u4Command,
 		break;
 	case AFIOC_T_SETVCMPOS:
 		af_len = a_u4Param;
-		LOG_INF("set af_len = %d\n",af_len);
+		LOG_INF("set af_len = %lu\n",af_len);
 		break;
 #endif
 
