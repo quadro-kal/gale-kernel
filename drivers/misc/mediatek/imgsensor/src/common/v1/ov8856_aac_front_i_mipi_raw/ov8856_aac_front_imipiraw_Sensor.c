@@ -443,13 +443,13 @@ static kal_uint16 set_gain(kal_uint16 gain)
 {
 	kal_uint16 reg_gain;
 
-	if (gain < BASEGAIN || gain > 15.5 * BASEGAIN) {
+	if (gain < BASEGAIN || gain > 31 * BASEGAIN / 2) {
 		LOG_INF("Error gain setting");
 
 		if (gain < BASEGAIN)
 			gain = BASEGAIN;
-		else if (gain > 15.5 * BASEGAIN)
-			gain = 15.5 * BASEGAIN;
+		else if (gain > 31 * BASEGAIN / 2)
+			gain = 31 * BASEGAIN / 2;
 	}
 
 	reg_gain = gain*2;
