@@ -249,7 +249,7 @@ int qmu_init_gpd_pool(struct device *dev)
 		Rx_gpd_free_count[i] = Rx_gpd_max_count[i] - 1;
 		TGPD_CLR_FLAGS_HWO(Rx_gpd_end[i]);
 		gpd_ptr_align(RXQ, i, Rx_gpd_end[i]);
-		QMU_DBG("RXGPD HEAD[%d] VIRT<0x%lx> DMA<0x%lx> RQSAR<0x%lx>\n",
+		QMU_DBG("RXGPD HEAD[%d] VIRT<%p> DMA<%p> RQSAR<%p>\n",
 			i, Rx_gpd_head[i], io_ptr,
 			(void *)(uintptr_t) gpd_virt_to_phys(
 				Rx_gpd_end[i], RXQ, i));
@@ -273,7 +273,7 @@ int qmu_init_gpd_pool(struct device *dev)
 		Tx_gpd_free_count[i] = Tx_gpd_max_count[i] - 1;
 		TGPD_CLR_FLAGS_HWO(Tx_gpd_end[i]);
 		gpd_ptr_align(TXQ, i, Tx_gpd_end[i]);
-		QMU_DBG("TXGPD HEAD[%d] VIRT<0x%lx> DMA<0x%lx> TQSAR<0x%lx>\n",
+		QMU_DBG("TXGPD HEAD[%d] VIRT<%p> DMA<%p> TQSAR<%p>\n",
 			i, Tx_gpd_head[i], io_ptr,
 			(void *)(uintptr_t)gpd_virt_to_phys(
 				Tx_gpd_end[i], TXQ, i));
@@ -1024,7 +1024,7 @@ void qmu_done_rx(struct musb *musb, u8 ep_num)
 			 TGPD_GET_DATA_RX(gpd));
 
 		if (!request) {
-			QMU_WARN("[RXD]%s the request is null, return.\n");
+			QMU_WARN("[RXD] the request is null, return.\n");
 			return;
 		}
 		request->actual += rcv_len;
