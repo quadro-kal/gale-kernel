@@ -157,7 +157,7 @@ int get_cur_volt_wrapper(struct mt_cpu_dvfs *p, struct buck_ctrl_t *volt_p)
 
 #ifdef CONFIG_HYBRID_CPU_DVFS
 #ifdef DVFS_CLUSTER_REMAPPING
-#ifdef MET_READY
+#if MET_READY
 static void _set_met_tag_oneshot(int id, unsigned int target_khz)
 {
 	if (id == DVFS_CLUSTER_LL)
@@ -188,7 +188,7 @@ static int _cpufreq_set_locked_secure(struct cpufreq_policy *policy,
 	cpuhvfs_set_dvfs(arch_get_cluster_id(p->cpu_id), target_khz);
 #endif
 
-#ifdef MET_READY
+#if MET_READY
 #ifdef DVFS_CLUSTER_REMAPPING
 	if (policy->cpu < 4)
 		_set_met_tag_oneshot(0, target_khz);

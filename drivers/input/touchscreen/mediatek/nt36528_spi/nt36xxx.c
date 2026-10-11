@@ -3092,6 +3092,13 @@ static int nvt_drm_panel_notifier_callback(struct notifier_block *self, unsigned
 
 	return 0;
 }
+void nvt_ts_esd_resume(int flag)
+{
+	if (flag == 1)
+		nvt_ts_resume(&ts->client->dev);
+	else
+		nvt_ts_suspend(&ts->client->dev);
+}
 #elif IS_ENABLED(NVT_MSM_DRM_NOTIFY)
 static int nvt_drm_notifier_callback(struct notifier_block *self, unsigned long event, void *data)
 {
