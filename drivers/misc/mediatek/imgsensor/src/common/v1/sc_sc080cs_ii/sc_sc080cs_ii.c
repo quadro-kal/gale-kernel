@@ -254,7 +254,8 @@ static void sc080cs_avdd_control(struct sc080cs *sc080cs, bool flag)
 
 	if (flag) {
 		regulator_set_voltage(vcama, 2800000, 2800000);
-		regulator_enable(vcama);
+		if (regulator_enable(vcama))
+			qvga_dev_err(sc080cs->dev, "%s AVDD enable failed\n", __func__);
 	} else {
 		regulator_disable(vcama);
 	}
@@ -273,7 +274,8 @@ static void sc080cs_iovdd_control(struct sc080cs *sc080cs, bool flag)
     }
     if (flag) {
         regulator_set_voltage(vcamio, 1800000, 1800000);
-        regulator_enable(vcamio);
+        if (regulator_enable(vcamio))
+            qvga_dev_err(sc080cs->dev, "%s IOVDD enable failed\n", __func__);
     } else {
         regulator_disable(vcamio);
     }
