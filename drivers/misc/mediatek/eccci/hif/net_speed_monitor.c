@@ -135,7 +135,8 @@ static struct mtk_pm_qos_request s_ddr_opp_req;
 #ifndef DDR_OPP_0
 #define DDR_OPP_0 0
 #define DDR_OPP_1 1
-#define DDR_OPP_UNREQ PM_QOS_DDR_OPP_DEFAULT_VALUE
+/* PM_QOS_DDR_OPP_DEFAULT_VALUE is 16 but only defined for MT6771 headers */
+#define DDR_OPP_UNREQ 16
 #endif
 static void dram_freq_rta_action(int lvl)
 {
