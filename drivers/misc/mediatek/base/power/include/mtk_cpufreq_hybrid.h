@@ -271,6 +271,112 @@ static inline int cpuhvfs_set_sched_dvfs_disable(unsigned int disable)
 {
 	return 0;
 }
+
+/* Extra stubs for APIs used by mtk_cpufreq_interface.c et al when
+ * HYBRID_CPU_DVFS is off. Signatures mirror src/mtk_cpufreq_hybrid.h. */
+static inline int cpuhvfs_set_dvfs_stress(unsigned int en)
+{
+	return 0;
+}
+static inline int cpuhvfs_set_freq(int cluster_id, unsigned int freq)
+{
+	return 0;
+}
+static inline int cpuhvfs_set_turbo_disable(unsigned int disable)
+{
+	return 0;
+}
+static inline int cpuhvfs_set_turbo_mode(int turbo_mode, int freq_step,
+					 int volt_step)
+{
+	return 0;
+}
+static inline int cpuhvfs_get_sched_dvfs_disable(void)
+{
+	return 0;
+}
+static inline int cpuhvfs_get_time_profile(void)
+{
+	return 0;
+}
+static inline unsigned int cpuhvfs_get_cci_result(unsigned int idx_1,
+						  unsigned int idx_2,
+						  unsigned int mode)
+{
+	return 0;
+}
+static inline void cpuhvfs_update_cci_map_tbl(unsigned int idx_1,
+					      unsigned int idx_2,
+					      unsigned char result,
+					      unsigned int mode,
+					      unsigned int use_id)	{}
+static inline unsigned int cpuhvfs_get_cci_mode(void)
+{
+	return 0;
+}
+static inline void cpuhvfs_update_cci_mode(unsigned int mode,
+					   unsigned int use_id)	{}
+static inline int cpuhvfs_set_init_volt(void)
+{
+	return 0;
+}
+static inline int cpuhvfs_set_turbo_scale(unsigned int turbo_f,
+					  unsigned int turbo_v)
+{
+	return 0;
+}
+static inline int cpuhvfs_set_volt(int cluster_id, unsigned int volt)
+{
+	return 0;
+}
+static inline int cpuhvfs_get_cur_volt(int cluster_id)
+{
+	return 0;
+}
+static inline int cpuhvfs_get_volt(int buck_id)
+{
+	return 0;
+}
+static inline int cpuhvfs_get_freq(int pll_id)
+{
+	return 0;
+}
+static inline int cpuhvfs_get_cur_dvfs_freq_idx(int cluster_id)
+{
+	return 0;
+}
+static inline unsigned int get_sram_table_volt(unsigned int cluster_id,
+					       int idx)
+{
+	return 0;
+}
+static inline int cpuhvfs_set_cluster_load_freq(int id, unsigned int freq)
+{
+	return 0;
+}
+static inline int cpuhvfs_set_set_cci_volt(unsigned int volt)
+{
+	return 0;
+}
+static inline unsigned int cpuhvfs_get_imax_state(void)
+{
+	return 0;
+}
+static inline unsigned int cpuhvfs_get_imax_thermal_state(void)
+{
+	return 0;
+}
+static inline void cpuhvfs_update_imax_state(unsigned int state)	{}
+static inline void cpuhvfs_update_imax_thermal_state(unsigned int state)	{}
+static inline int cpuhvfs_set_iccs_freq(int id, unsigned int freq)
+{
+	return 0;
+}
+static inline int cpuhvfs_update_volt(unsigned int cluster_id,
+				      unsigned int *volt_tbl, char nr_volt_tbl)
+{
+	return 0;
+}
 #endif
 
 
