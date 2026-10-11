@@ -289,7 +289,7 @@ static void set_max_framerate(UINT16 framerate,kal_bool min_framelength_en)
     kal_uint32 frame_length = imgsensor.frame_length;
     //unsigned long flags;
 
-    LOG_INF("framerate = %d, min framelength should enable? \n", framerate,min_framelength_en);
+    LOG_INF("framerate = %d, min framelength %d should enable? \n", framerate,min_framelength_en);
 
     frame_length = imgsensor.pclk / framerate * 10 / imgsensor.line_length;
     spin_lock(&imgsensor_drv_lock);
@@ -952,7 +952,7 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
                 sc202cs_sn_read();
                 return ERROR_NONE;
             }   
-            LOG_INF("Read sensor id fail, id: 0x%x\n", imgsensor.i2c_write_id,*sensor_id);
+            LOG_INF("Read sensor id fail, id: 0x%x sensor_id: 0x%x\n", imgsensor.i2c_write_id,*sensor_id);
         }    retry--;
         } while(retry > 0);
         i++;
@@ -1005,7 +1005,7 @@ static kal_uint32 open(void)
 				 LOG_INF("i2c write id: 0x%x, sensor id: 0x%x\n", imgsensor.i2c_write_id,sensor_id);   
 				 break;
 			 }	 
-			 LOG_INF("Read sensor id fail, id: 0x%x\n", imgsensor.i2c_write_id,sensor_id);
+			 LOG_INF("Read sensor id fail, id: 0x%x sensor_id: 0x%x\n", imgsensor.i2c_write_id,sensor_id);
 			 retry--;
 		 } while(retry > 0);
 		 i++;
