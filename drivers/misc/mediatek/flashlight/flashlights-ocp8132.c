@@ -466,7 +466,7 @@ static ssize_t mt_cust_gpio_torch_brightness_store(struct device *dev,
 	ret = kstrtoul(buf, 10, &value);
 	if (ret < 0)
 		return ret;
-	pr_info("%s value is %d,length is %d\n",__func__,value,strlen(buf));
+	pr_info("%s value is %lu,length is %zd\n",__func__,value,strlen(buf));
 
 	value = cust_gpio_verify_level(value);
 	last_val = value;
