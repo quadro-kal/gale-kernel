@@ -3722,7 +3722,7 @@ static kal_uint32 feature_control(MSDK_SENSOR_FEATURE_ENUM feature_id,
 		spin_unlock(&imgsensor_drv_lock);
 		break;
 	case SENSOR_FEATURE_GET_CROP_INFO:
-		LOG_INF("SENSOR_FEATURE_GET_CROP_INFO scenarioId:%llu\n", (UINT16)*feature_data);
+		LOG_INF("SENSOR_FEATURE_GET_CROP_INFO scenarioId:%u\n", (unsigned int)(UINT16)*feature_data);
 		tmp = (uintptr_t)(*(feature_data+1));
 		wininfo = (struct SENSOR_WINSIZE_INFO_STRUCT *)tmp;
 		switch (*feature_data_32) {
@@ -3854,7 +3854,7 @@ static kal_uint32 feature_control(MSDK_SENSOR_FEATURE_ENUM feature_id,
 		streaming_control(KAL_FALSE);
 		break;
 	case SENSOR_FEATURE_SET_STREAMING_RESUME:
-		LOG_INF("SENSOR_FEATURE_SET_STREAMING_RESUME, shutter:%llu\n", (UINT16)*feature_data);
+		LOG_INF("SENSOR_FEATURE_SET_STREAMING_RESUME, shutter:%u\n", (unsigned int)(UINT16)*feature_data);
 		if (*feature_data != 0)
 			set_shutter(*feature_data);
 		streaming_control(KAL_TRUE);
