@@ -20,10 +20,10 @@ static const u32 smi_subsys_to_larbs[NR_SYSS] = {
 #if IS_ENABLED(CONFIG_MMPROFILE)
 #include <mmprofile_function.h>
 
-static const char *smi_mmp_name[NR_SYSS] = {
+static const char *smi_mmp_name[NR_SYSS] __maybe_unused = {
 	[SYS_DIS] = "DIS", [SYS_VDEC] = "VDE",
 	[SYS_ISP] = "ISP", [SYS_CAM] = "CAM", [SYS_VENC] = "VEN",
 };
-static mmp_event smi_mmp_event[NR_SYSS];
+static mmp_event smi_mmp_event[NR_SYSS] __maybe_unused;
 #endif
 #endif

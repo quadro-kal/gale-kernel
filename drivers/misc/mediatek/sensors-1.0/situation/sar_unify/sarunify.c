@@ -38,8 +38,8 @@ static int sar_unify_get_data(int *probability, int *status)
 	}
 	time_stamp = data.time_stamp;
 	*probability = data.data[0];//data.gesture_data_t.probability;
-	pr_err("sarunify recv ipi: timestamp: %lld, probability: %d\n", time_stamp,
-		*probability, data.data[0]);
+	pr_err("sarunify recv ipi: timestamp: %llu, probability: %d\n",
+		(unsigned long long)time_stamp, *probability);
 	return 0;
 }
 static int sar_unify_open_report_data(int open)
