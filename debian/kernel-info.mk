@@ -83,9 +83,11 @@ FLASH_INFO_CPU = MT6768
 
 # Toolchain - manual Linaro GCC 6.3.1 in /opt (matches build.config.mtk.aarch64.gcc)
 # + Debian cross gcc-aarch64 as fallback in /usr/bin
+# /opt/ccache-wrap shadows the cross-gcc with a ccache wrapper (same compiler).
+# Persist cache via podman: -v $PWD/CCACHE-DIR:/buildd/ccache:Z -e CCACHE_DIR=/buildd/ccache
 CLANG_CUSTOM := 0
 DEB_TOOLCHAIN := gcc
-BUILD_PATH := /opt/gcc-6.3.1/bin:/usr/bin
+BUILD_PATH := /opt/ccache-wrap:/opt/gcc-6.3.1/bin:/usr/bin
 BUILD_CC := aarch64-linux-gnu-gcc
 # BUILD_CLANG_TRIPLET not needed for GCC
 BUILD_CLANG_TRIPLET := aarch64-linux-gnu
