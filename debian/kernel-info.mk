@@ -14,11 +14,12 @@ KERNEL_DEFCONFIG = gale_defconfig
 KERNEL_ARCH = arm64
 DEB_BUILD_FOR = arm64
 
-# Kernel image type
+# Kernel image type (variable name REQUIRED by linux-packaging-snippets:
+# kernel-snippet.mk uses KERNEL_BUILD_TARGET to build + package the image)
 # Image.gz = gzipped Image with DTB appended after (default for Android 9+)
 # Image.gz-dtb = legacy, DTB appended to kernel
 # Image = uncompressed, prebuilt DT
-KERNEL_IMAGE_TARGET = Image.gz
+KERNEL_BUILD_TARGET = Image.gz
 
 # DTB handling
 KERNEL_IMAGE_WITH_DTB = 1
