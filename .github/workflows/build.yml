@@ -49,6 +49,7 @@ jobs:
             apt-get install -y -qq ccache
             ccache -s
             cd /buildd/sources
+            PATH=/usr/lib/releng-tools/wrappers:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/X11 debian/rules debian/control
             RELENG_HOST_ARCH=arm64 releng-build-package
             ccache -s
           "
