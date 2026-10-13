@@ -46,7 +46,7 @@ jobs:
             quay.io/droidian/build-essential:current-amd64 bash -c "
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -qq
-            apt-get install -y -qq ccache
+            apt-get install -y -qq ccache linux-packaging-snippets
             ccache -s
             cd /buildd/sources
             PATH=/usr/lib/releng-tools/wrappers:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/X11 debian/rules debian/control
