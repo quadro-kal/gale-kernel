@@ -86,7 +86,8 @@
 
 /* Sentinel for GPU buffers (no GPU M4U port on mt6768).
  * Mirrors newer SoCs (e.g. mt6781) which use MTK_M4U_ID(31, 31);
- * out of mt6768's larb range (0-4) so it can never collide. */
+ * out of mt6768's larb range (0-4) so it can never collide.
+ */
 #define M4U_PORT_GPU				MTK_M4U_ID(31, 31)
 
 /* for pusedo ccu device */
