@@ -1,0 +1,67 @@
+name: Build gale kernel
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+      - '*.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore ccache
+        uses: actions/cache@v4
+        with:
+          path: ccache-dir
+          key: ccache-gale-4.19-v1
+
+      - name: Restore apt cache
+        uses: actions/cache@v4
+        with:
+          path: apt-cache
+          key: apt-gale-v1
+
+      - name: Fetch GCC 6.3.1 toolchain
+        run: |
+          mkdir -p toolchain packages ccache-dir apt-cache
+          curl -sL -o toolchain.tar.gz \
+            https://github.com/quadro-kal/gale-kernel/releases/download/toolchain/gcc-linaro-6.3.1.tar.gz
+          tar -xzf toolchain.tar.gz -C toolchain
+
+      - name: Build kernel in Droidian container
+        run: |
+          docker run --privileged \
+            -v "$PWD/packages:/buildd" \
+            -v "$PWD:/buildd/sources" \
+            -v "$PWD/toolchain:/opt" \
+            -v "$PWD/ccache-dir:/root/.ccache" \
+            -v "$PWD/apt-cache:/var/cache/apt/archives" \
+            quay.io/droidian/build-essential:current-amd64 bash -c "
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -qq
+            apt-get install -y -qq ccache
+            ccache -s
+            cd /buildd/sources
+            RELENG_HOST_ARCH=arm64 releng-build-package
+            ccache -s
+          "
+
+      - name: Publish debs to gale-apt
+        env:
+          GALE_APT_TOKEN: ${{ secrets.GALE_APT_TOKEN }}
+        run: |
+          git clone "https://x-access-token:${GALE_APT_TOKEN}@github.com/quadro-kal/gale-apt.git" apt-repo
+          cd apt-repo
+          git rm -q packages/linux-*.deb || true
+          cp ../packages/linux-*.deb packages/
+          git add packages
+          git -c user.name="gale-kernel-ci" -c user.email="ci@gale-kernel.local" \
+            commit -m "kernel $(cd .. && git rev-parse --short HEAD)"
+          git push origin main
