@@ -86,7 +86,9 @@ FLASH_INFO_CPU = MT6768
 # + Debian cross gcc-aarch64 as fallback in /usr/bin
 # /opt/ccache-wrap shadows the cross-gcc with a ccache wrapper (same compiler).
 # Persist cache via podman: -v $PWD/CCACHE-DIR:/buildd/ccache:Z -e CCACHE_DIR=/buildd/ccache
-CLANG_CUSTOM := 0
+CLANG_CUSTOM := 1
+# (1 = custom toolchain managed via BUILD_PATH/BUILD_CC below; also stops
+# snippet from prepending an empty clang-android- dep to build-deps)
 DEB_TOOLCHAIN := gcc
 BUILD_PATH := /opt/ccache-wrap:/opt/gcc-6.3.1/bin:/usr/bin
 BUILD_CC := aarch64-linux-gnu-gcc
